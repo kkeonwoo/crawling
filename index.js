@@ -12,7 +12,7 @@ app.set("port", process.env.PORT || "8099");
 const port = app.get("port");
 
 app.get("/", (req, res) => {
-  res.send("hello express");
+  res.render("index");
 });
 
 // 동적 로딩 ssr / csr (vue, react) puppeteer (구글, 크롬에서만 동작)
@@ -48,55 +48,55 @@ app.get("/gmarket/:item", async (req, res) => {
   res.json(sendItemsArray);
 });
 
-app.get("/daum/news", (req, res) => {
-  axios({
-    url: "http://news.daum.net",
-  }).then((response) => {
-    // console.log(response.data);
-    const $ = cheerio.load(response.data);
-    const newsList = $(".list_newsissue").children("li");
-    const sendNewsList = [];
-    newsList.each((idx, item) => {
-      sendNewsList.push({
-        title: $(item).find(".tit_g").text().replaceAll("\n", "").trim(),
-        img: $(item).find(".wrap_thumb .thumb_g").attr("src"),
-        category: $(item).find(".txt_category").text(),
-        company: $(item).find(".logo_cp .thumb_g").attr("src"),
-        url: $(item).find(".tit_g a").attr("href"),
-      });
-    });
-    res.json(sendNewsList);
-    // res.send(sendNewsList);
-  });
-});
+// app.get("/daum/news", (req, res) => {
+//   axios({
+//     url: "http://news.daum.net",
+//   }).then((response) => {
+//     // console.log(response.data);
+//     const $ = cheerio.load(response.data);
+//     const newsList = $(".list_newsissue").children("li");
+//     const sendNewsList = [];
+//     newsList.each((idx, item) => {
+//       sendNewsList.push({
+//         title: $(item).find(".tit_g").text().replaceAll("\n", "").trim(),
+//         img: $(item).find(".wrap_thumb .thumb_g").attr("src"),
+//         category: $(item).find(".txt_category").text(),
+//         company: $(item).find(".logo_cp .thumb_g").attr("src"),
+//         url: $(item).find(".tit_g a").attr("href"),
+//       });
+//     });
+//     res.json(sendNewsList);
+//     // res.send(sendNewsList);
+//   });
+// });
 
-app.get("/gmarket/tomato", (req, res) => {
-  axios({
-    url: "http://corners.gmarket.co.kr/SuperDeals",
-  })
-    .then((response) => {
-      // console.log(response.data);
-      const $ = cheerio.load(response.data);
-      const shoppingList = $(".item_list").children("li");
-      const sendShopList = [];
-      shoppingList.each((idx, item) => {
-        sendShopList.push({
-          title: $(item).find(".inner a .title").text(),
-          img: $(item).find(".inner a .thumb").attr("src"),
-          sale: $(item).find(".info .sale strong").text(),
-          price: $(item).find(".info .price strong").text(),
-          delPrice: $(item).find(".info .price del").text(),
-          tag: $(item).find(".tag:nth-child(2)").text(),
-          url: $(item).find(".inner a").attr("href"),
-          buy: $(item).find(".option .buy").text(),
-        });
-      });
-      res.json(sendShopList);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-});
+// app.get("/gmarket/tomato", (req, res) => {
+//   axios({
+//     url: "http://corners.gmarket.co.kr/SuperDeals",
+//   })
+//     .then((response) => {
+//       // console.log(response.data);
+//       const $ = cheerio.load(response.data);
+//       const shoppingList = $(".item_list").children("li");
+//       const sendShopList = [];
+//       shoppingList.each((idx, item) => {
+//         sendShopList.push({
+//           title: $(item).find(".inner a .title").text(),
+//           img: $(item).find(".inner a .thumb").attr("src"),
+//           sale: $(item).find(".info .sale strong").text(),
+//           price: $(item).find(".info .price strong").text(),
+//           delPrice: $(item).find(".info .price del").text(),
+//           tag: $(item).find(".tag:nth-child(2)").text(),
+//           url: $(item).find(".inner a").attr("href"),
+//           buy: $(item).find(".option .buy").text(),
+//         });
+//       });
+//       res.json(sendShopList);
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//     });
+// });
 
 app.listen(port, () => {
   console.log(`${port}번에서 서버 대기중`);
