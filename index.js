@@ -12,7 +12,7 @@ app.set("port", process.env.PORT || "8099");
 const port = app.get("port");
 
 app.get("/", (req, res) => {
-  res.render("index");
+  res.send("hello express");
 });
 
 // 동적 로딩 ssr / csr (vue, react) puppeteer (구글, 크롬에서만 동작)
