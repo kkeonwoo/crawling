@@ -25,7 +25,7 @@ app.get("/gmarket/:item", async (req, res) => {
   const searchItem = encodeURIComponent(item);
   const browser = await puppeteer.launch({
     headless: true,
-    args: ["--no-sandbox", "--disalbe-setuid-sandbox", ""],
+    // args: ["--no-sandbox", "--disalbe-setuid-sandbox", ""],
   });
   const page = await browser.newPage();
   await page.setViewport({
