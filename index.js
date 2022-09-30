@@ -27,6 +27,7 @@ app.get("/gmarket/:item", async (req, res) => {
     headless: true,
     // args: ["--no-sandbox", "--disalbe-setuid-sandbox", ""],
   });
+
   const page = await browser.newPage();
   await page.setViewport({
     width: 1620,
