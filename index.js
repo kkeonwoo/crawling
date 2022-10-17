@@ -60,7 +60,7 @@ app.get("/gmarket/:item", async (req, res) => {
     const price = $(item).find(".text__value").text();
     const img = $(item).find(".image__item").attr("src");
     const link = $(item).find(".box__image a").attr("href");
-    sendItemsArray.push({ title: title, price: price, img: img, link: link });
+    sendItemsArray.push({ title: title, price: price, img: { http: img }, link: link });
   });
   res.json(sendItemsArray);
 });
