@@ -25,7 +25,7 @@ app.get("/gmarket/:item", async (req, res) => {
   const searchItem = encodeURIComponent(item);
   const browser = await puppeteer.launch({
     headless: true,
-    // args: ["--no-sandbox", "--disalbe-setuid-sandbox", ""],
+    args: ["--no-sandbox", "--disable-setuid-sandbox", "--window-size=1600,2000"],
   });
 
   const page = await browser.newPage();
@@ -33,18 +33,34 @@ app.get("/gmarket/:item", async (req, res) => {
     width: 1620,
     height: 2000,
   });
-  await page.goto(`https://browse.gmarket.co.kr/search?keyword=${searchItem}`, { waitUntil: "load" });
+  await page.goto(`https://browse.gmarket.co.kr/search?keyword=${searchItem}`);
+  // await autoScroll(page)
+  await page.evaluate(async () => {
+    console.log(document.body.scrollHeight);
+    const scrollHeight = document.body.scrollHeight;
+    const aa = await new Promise((resolve, reject) => {
+      let total = 0;
+      const amount = 200;
+      window.scrollTo(0, scrollHeight);
+      const timer = setTimeout(() => {
+        clearTimeout(timer);
+        resolve("end");
+      }, 3000);
+    });
+    console.log(aa);
+  });
+
   const content = await page.content();
   const $ = cheerio.load(content);
   const items = $(".box__component-itemcard");
   const sendItemsArray = [];
+
   items.each((idx, item) => {
     const title = $(item).find(".text__item").text();
-    const img = $(item).find(".image__item").attr("src");
     const price = $(item).find(".text__value").text();
+    const img = $(item).find(".image__item").attr("src");
     const link = $(item).find(".box__image a").attr("href");
-    sendItemsArray.push({ title: title, price: price, image: img, link: link });
-    // console.log(img);
+    sendItemsArray.push({ title: title, price: price, img: img, link: link });
   });
   res.json(sendItemsArray);
 });
